@@ -31,6 +31,7 @@
     "#shared/database/*": "./src/shared/*.ts",
     "#shared/*": "./src/shared/*.ts"
   },
+  "packageManager": "pnpm@10.9.0",
   "engines": {
     "node": ">=22.0.0"
   },
