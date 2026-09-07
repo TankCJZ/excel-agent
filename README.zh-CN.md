@@ -2,12 +2,12 @@
 
 # 📊 Excel Agent
 
-**基于 Cloudflare Workers、Mastra、OpenAI GPT-5.6 Luna 和 Cloudflare Workflows 构建的企业级开源 AI 表格智能体 Worker**
+**基于 Cloudflare Workers、Mastra、Cloudflare Workers AI 与 Cloudflare Workflows 构建的企业级开源 AI 表格智能体 Worker**
 
 [![官方站点](https://img.shields.io/badge/官方网站-excelgen.app-2563eb?style=for-the-badge&logo=googlechrome&logoColor=white)](https://www.excelgen.app)
 [![开源协议](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge)](LICENSE)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
-[![OpenAI GPT-5.6](https://img.shields.io/badge/OpenAI-GPT--5.6%20Luna-412991?style=for-the-badge&logo=openai&logoColor=white)](https://developers.cloudflare.com/ai/models/openai/gpt-5.6-luna/)
+[![Workers AI](https://img.shields.io/badge/AI-Cloudflare%20Workers%20AI-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://developers.cloudflare.com/workers-ai/)
 [![Mastra](https://img.shields.io/badge/开发框架-Mastra%20AI-black?style=for-the-badge)](https://mastra.ai)
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [在线演示 (https://www.excelgen.app)](https://www.excelgen.app)
@@ -21,7 +21,7 @@
 **Excel Agent** 是 [ExcelGen.app](https://www.excelgen.app) 官方采用的开源核心后端智能体引擎。它直接运行在 Cloudflare 全球边缘网络上，提供多轮智能表格对话、确定性数据统计分析、公式自动推导以及交互式图表生成。
 
 与市面上直接将大批杂乱数据喂给大语言模型并容易产生幻觉的方案不同，**Excel Agent** 采用严格的**结构驱动、确定性计算管道**：
-1. **结构感知与意图规划**：大模型（`openai/gpt-5.6-luna` 通过 Cloudflare Responses API）解析表格真实 Schema，仅生成类型安全的 `AnalysisPlan` 执行计划。
+1. **结构感知与意图规划**：大模型（借助 Cloudflare Workers AI 驱动流式推理与工具调用）解析表格真实 Schema，仅生成类型安全的 `AnalysisPlan` 执行计划。
 2. **零幻觉执行**：数值求和、平均值、分组聚合、数据清洗、公式计算全由 Worker 内部确定的计算执行器和 SheetJS 完成，杜绝模型瞎编数字与错误公式。
 3. **高可用长任务调度**：大型工作簿的复杂生成与导出任务由 **Cloudflare Workflows** 承载，具备多步重试与状态断点续跑能力。
 4. **边缘存储持久化**：多轮会话记录与工作簿 Context 缓存持久化保存在 **Cloudflare D1** 与 **Cloudflare R2**。
@@ -41,11 +41,11 @@
                                 │
         ┌───────────────────────┼────────────────────────┐
         ▼                       ▼                        ▼
-┌──────────────┐      ┌──────────────────┐     ┌──────────────────┐
-│ Workers AI   │      │ Cloudflare D1    │     │ Cloudflare R2    │
-│ GPT-5.6 Luna │      │ 会话历史、状态   │     │ 工作簿与文件     │
-│ Responses API│      │ 任务与上下文     │     │ Context 缓存     │
-└──────────────┘      └──────────────────┘     └──────────────────┘
+┌──────────────────────┐ ┌──────────────────┐     ┌──────────────────┐
+│ Cloudflare Workers AI│ │ Cloudflare D1    │     │ Cloudflare R2    │
+│ 高性能大模型与工具调用 │ │ 会话历史、状态   │     │ 工作簿与文件     │
+│ 流式推理 (Streaming) │ │ 任务与上下文     │     │ Context 缓存     │
+└──────────────────────┘ └──────────────────┘     └──────────────────┘
                                 │
                                 ▼
                      ┌──────────────────────┐
@@ -62,7 +62,7 @@
 - **🗣️ 多轮工作簿智能对话**：围绕同一份 Excel 文件连续追问，支持表格版本回溯与增量分析。
 - **📈 确定性统计与图表**：精准生成柱状图、折线图、饼图、散点图，且指标结果经代码严格核算。
 - **📑 智能从零生成表格**：一键生成符合格式规范的全新 `.xlsx` 工作簿，内置带样式的真实公式。
-- **⚡ 原生集成 GPT-5.6 Luna**：适配 Cloudflare Responses API 原生绑定，生产环境零额外 API Key。
+- **⚡ 原生集成 Cloudflare Workers AI**：借助原生 `env.AI` 绑定直接调度边缘大语言模型，生产环境零外部 API 密钥。
 - **🔄 Cloudflare Workflows 长任务**：支持异步导出大型报表，具备任务容灾和断点续传。
 - **🛡️ 纯 TypeScript 与边缘原生**：无需配置 Python 环境或重量级虚拟机，开箱即用。
 
@@ -111,7 +111,7 @@ pnpm db:migrate:local
 # 模式 A：使用内置 Mock 模型（无需调用真实大模型，0 推理费用，极速测试）
 pnpm dev:mock
 
-# 模式 B：使用真实 Cloudflare GPT-5.6 Luna 模型
+# 模式 B：连接 Cloudflare Workers AI 运行
 pnpm dev
 ```
 

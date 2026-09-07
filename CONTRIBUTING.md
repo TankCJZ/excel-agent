@@ -25,7 +25,7 @@ Thank you for your interest in contributing to **Excel Agent**! We welcome bug r
    # Run with mock planner (no API key needed):
    pnpm dev:mock
 
-   # Or run with real OpenAI GPT-5.6 Luna via Cloudflare:
+   # Or run with Cloudflare Workers AI models:
    pnpm dev
    ```
 

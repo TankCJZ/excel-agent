@@ -2,12 +2,12 @@
 
 # 📊 Excel Agent
 
-**Production-ready AI Excel Agent Worker built with Cloudflare Workers, Mastra, OpenAI GPT-5.6 Luna, and Cloudflare Workflows.**
+**Production-ready AI Excel Agent Worker built with Cloudflare Workers, Mastra, Cloudflare Workers AI, and Cloudflare Workflows.**
 
 [![Official Website](https://img.shields.io/badge/Official%20Website-excelgen.app-2563eb?style=for-the-badge&logo=googlechrome&logoColor=white)](https://www.excelgen.app)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge)](LICENSE)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
-[![OpenAI GPT-5.6](https://img.shields.io/badge/OpenAI-GPT--5.6%20Luna-412991?style=for-the-badge&logo=openai&logoColor=white)](https://developers.cloudflare.com/ai/models/openai/gpt-5.6-luna/)
+[![Workers AI](https://img.shields.io/badge/AI-Cloudflare%20Workers%20AI-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://developers.cloudflare.com/workers-ai/)
 [![Mastra](https://img.shields.io/badge/Framework-Mastra%20AI-black?style=for-the-badge)](https://mastra.ai)
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [Live Demo (https://www.excelgen.app)](https://www.excelgen.app)
@@ -21,7 +21,7 @@
 **Excel Agent** is the open-source backend engine powering [ExcelGen.app](https://www.excelgen.app). It executes multi-turn conversational intelligence, deterministic spreadsheet analysis, automated formula synthesis, and interactive data visualization directly at Cloudflare's edge.
 
 Unlike naive LLM wrappers that paste raw data into model prompts, **Excel Agent** employs a strict **schema-first, deterministic execution pipeline**:
-1. **Intelligent Intent & Plan Generation**: The model (`openai/gpt-5.6-luna` via Cloudflare Responses API) inspects workbook structures and outputs a strongly typed `AnalysisPlan`.
+1. **Intelligent Intent & Plan Generation**: The model (powered by Cloudflare Workers AI with streaming and tool calling) inspects workbook structures and outputs a strongly typed `AnalysisPlan`.
 2. **Zero-Hallucination Execution**: Calculations (aggregations, sums, groupings, filters, data quality audits) are computed deterministically by the Worker and SheetJS engine—preventing hallucinated figures or broken formulas.
 3. **Resilient Long Tasks**: Large workbooks and multi-step mutations run on **Cloudflare Workflows** with automatic retries and checkpointing.
 4. **Edge Persistence**: Multi-turn history, context caches, and memory are stored in **Cloudflare D1** and **Cloudflare R2**.
@@ -41,11 +41,11 @@ Unlike naive LLM wrappers that paste raw data into model prompts, **Excel Agent*
                                 │
         ┌───────────────────────┼────────────────────────┐
         ▼                       ▼                        ▼
-┌──────────────┐      ┌──────────────────┐     ┌──────────────────┐
-│ Workers AI   │      │ Cloudflare D1    │     │ Cloudflare R2    │
-│ GPT-5.6 Luna │      │ Conversations    │     │ Workbooks        │
-│ Responses API│      │ Tasks & Memory   │     │ Cached Contexts  │
-└──────────────┘      └──────────────────┘     └──────────────────┘
+┌──────────────────────┐ ┌──────────────────┐     ┌──────────────────┐
+│ Cloudflare Workers AI│ │ Cloudflare D1    │     │ Cloudflare R2    │
+│ Advanced Edge LLMs   │ │ Conversations    │     │ Workbooks        │
+│ Streaming & Tools    │ │ Tasks & Memory   │     │ Cached Contexts  │
+└──────────────────────┘ └──────────────────┘     └──────────────────┘
                                 │
                                 ▼
                      ┌──────────────────────┐
@@ -62,7 +62,7 @@ Unlike naive LLM wrappers that paste raw data into model prompts, **Excel Agent*
 - **🗣️ Multi-Turn Workbook Dialogue**: Ask follow-up questions about complex workbooks with full revision control and context caching.
 - **📈 Deterministic Analytics & Charts**: Produces bar, line, pie, and scatter charts with exact formulas and verified calculations.
 - **📑 New Spreadsheet Generation**: Generates clean `.xlsx` spreadsheets from scratch with native styles, conditional formatting, and verified formulas.
-- **⚡ OpenAI GPT-5.6 Luna on Cloudflare**: Uses Cloudflare Responses API with direct `env.AI` binding—zero external API keys required in production.
+- **⚡ Cloudflare Workers AI Native**: Leverages direct `env.AI` bindings—runs advanced models at the edge with zero external API keys.
 - **🔄 Async Cloudflare Workflows**: Handles large-scale workbook exports and complex transforms with step-level fault tolerance.
 - **🛡️ Type-Safe & Zero External Runtime**: Runs natively on Cloudflare Workers edge runtime with TypeScript.
 
@@ -111,7 +111,7 @@ pnpm db:migrate:local
 # Option A: Fast mock model for testing (zero token cost)
 pnpm dev:mock
 
-# Option B: Real OpenAI GPT-5.6 Luna via Cloudflare
+# Option B: Real Cloudflare Workers AI models
 pnpm dev
 ```
 

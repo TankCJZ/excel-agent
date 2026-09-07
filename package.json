@@ -1,7 +1,7 @@
 {
   "name": "excel-agent",
   "version": "1.0.0",
-  "description": "Production-ready AI Excel Agent Worker powered by Cloudflare Workers, Mastra, OpenAI GPT-5.6 Luna, and Cloudflare Workflows.",
+  "description": "Production-ready AI Excel Agent Worker powered by Cloudflare Workers, Mastra, Cloudflare Workers AI, and Cloudflare Workflows.",
   "type": "module",
   "homepage": "https://www.excelgen.app",
   "repository": {
@@ -18,8 +18,8 @@
     "agent",
     "mastra",
     "cloudflare-workers",
-    "openai",
-    "gpt-5-6-luna",
+    "workers-ai",
+    "ai-agent",
     "workflows",
     "d1",
     "r2"
