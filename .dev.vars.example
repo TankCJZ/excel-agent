@@ -1,0 +1,9 @@
+# Cloudflare API Configuration for local development
+CLOUDFLARE_ACCOUNT_ID=your-cloudflare-account-id
+CLOUDFLARE_API_TOKEN=your-cloudflare-api-token
+
+# Optional: Shared Secret for Agent Authentication
+AGENT_TOKEN_SECRET=your-random-agent-token-secret
+
+# Local billing switch (set to true to test credit reservations locally)
+LOCAL_BILLING_ENABLED=false

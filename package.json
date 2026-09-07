@@ -1,0 +1,67 @@
+{
+  "name": "excel-agent",
+  "version": "1.0.0",
+  "description": "Production-ready AI Excel Agent Worker powered by Cloudflare Workers, Mastra, OpenAI GPT-5.6 Luna, and Cloudflare Workflows.",
+  "type": "module",
+  "homepage": "https://www.excelgen.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TankCJZ/excel-agent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TankCJZ/excel-agent/issues"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "excel",
+    "spreadsheet",
+    "agent",
+    "mastra",
+    "cloudflare-workers",
+    "openai",
+    "gpt-5-6-luna",
+    "workflows",
+    "d1",
+    "r2"
+  ],
+  "imports": {
+    "#agent/*": "./src/*.ts",
+    "#shared/agent/*": "./src/shared/*.ts",
+    "#shared/billing/*": "./src/shared/*.ts",
+    "#shared/database/*": "./src/shared/*.ts",
+    "#shared/*": "./src/shared/*.ts"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev": "wrangler dev --port 8788 --persist-to .wrangler/state --var AGENT_ENV:development --var ALLOWED_ORIGINS:http://127.0.0.1:3000,http://localhost:3000,https://www.excelgen.app",
+    "dev:mock": "wrangler dev tests/fixtures/localBillingWorker.ts --port 8788 --persist-to .wrangler/state --local --test-scheduled --var AGENT_ENV:development --var MASTRA_MODEL:mock/excel-planner --var AGENT_REQUEST_TIMEOUT_MS:10000 --var ALLOWED_ORIGINS:http://127.0.0.1:3000,http://localhost:3000,https://www.excelgen.app",
+    "deploy": "wrangler deploy",
+    "test": "node --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "db:migrate:local": "wrangler d1 migrations apply excel-agent-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply excel-agent-db --remote"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "4.0.58",
+    "@mastra/ai-sdk": "1.10.1",
+    "@mastra/cloudflare-d1": "1.3.0",
+    "@mastra/core": "1.61.0",
+    "@mastra/memory": "1.27.0",
+    "@xmldom/xmldom": "^0.9.12",
+    "ai": "7.0.92",
+    "drizzle-orm": "^0.45.1",
+    "fflate": "^0.8.3",
+    "jose": "^6.1.3",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
+    "xlsx-js-style": "1.2.0",
+    "zod": "^4.2.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250224.0",
+    "@types/node": "^26.4.1",
+    "typescript": "^5.8.2",
+    "wrangler": "^4.125.0"
+  }
+}

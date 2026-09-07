@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "lib": ["ES2022"],
+    "types": [
+      "@cloudflare/workers-types",
+      "node",
+      "./worker-configuration.d.ts"
+    ],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "#agent/*": ["./src/*"],
+      "#shared/*": ["./src/shared/*"],
+      "#shared/agent/*": ["./src/shared/*"],
+      "#shared/billing/*": ["./src/shared/*"],
+      "#shared/database/*": ["./src/shared/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "worker-configuration.d.ts"
+  ]
+}

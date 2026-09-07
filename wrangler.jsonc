@@ -1,0 +1,65 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "excel-agent",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-24",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "alias": {
+    "unicorn-magic": "./src/compat/unicorn-magic.ts"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "triggers": { "crons": ["*/15 * * * *"] },
+  "limits": {
+    "cpu_ms": 300000
+  },
+  "ai": {
+    "binding": "AI",
+    "remote": true
+  },
+  "vars": {
+    "AGENT_ENV": "production",
+    "MASTRA_MODEL": "openai/gpt-5.6-luna",
+    "CLOUDFLARE_ACCOUNT_ID": "ec3c6c647b0cb93c9a237028f499f427",
+    "WEB_SEARCH_MODEL": "openai/gpt-5.6-luna",
+    "AI_GATEWAY_ID": "default",
+    "WEB_SEARCH_MAX_TOOL_CALLS": "3",
+    "WEB_SEARCH_TIMEOUT_MS": "15000",
+    "SPREADSHEET_MAX_ROWS": "50",
+    "WORKBOOK_EDITING_ENABLED": "true",
+    "AGENT_REQUEST_TIMEOUT_MS": "90000",
+    "AGENT_ANSWER_TIMEOUT_MS": "45000",
+    "ALLOWED_ORIGINS": "https://www.excelgen.app,http://127.0.0.1:3000,http://localhost:3000",
+    "MAX_UPLOAD_BYTES": "20971520"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "excelgen",
+      "database_id": "db67f1cd-dca9-4c16-9c1b-ae91867c902d",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "WORKBOOKS",
+      "bucket_name": "excelgen-media"
+    }
+  ],
+  "workflows": [
+    {
+      "binding": "EXCEL_AGENT_WORKFLOW",
+      "name": "excelgen-workbook-processing",
+      "class_name": "ExcelAgentWorkflow"
+    },
+    {
+      "binding": "SPREADSHEET_GENERATION_WORKFLOW",
+      "name": "excelgen-spreadsheet-generation",
+      "class_name": "SpreadsheetGenerationWorkflow"
+    }
+  ]
+}
